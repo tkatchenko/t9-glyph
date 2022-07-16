@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>T9 GLYPH</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    canvas {
+      height: 300px;
+      width: 300px;
+    }
+  </style>
+  <script>
+    const conversion = {
+      'a': 2,
+      'b': 2,
+      'c': 2,
+      'd': 3,
+      'e': 3,
+      'f': 3,
+      'g': 4,
+      'h': 4,
+      'i': 4,
+      'j': 5,
+      'k': 5,
+      'l': 5,
+      'm': 6,
+      'n': 6,
+      'o': 6,
+      'p': 7,
+      'q': 7,
+      'r': 7,
+      's': 7,
+      't': 8,
+      'u': 8,
+      'v': 8,
+      'w': 9,
+      'x': 9,
+      'y': 9,
+      'z': 9,
+    };
+
+    function convert(word) {
+      const points = [];
+      word = word.toLowerCase();
+
+      [...word].forEach((l) => {
+        const number = conversion[l];
+
+        if (number) points.push(number);
+      });
+
+      return points;
+    }
+
+    function draw(points) {
+      const canvas = document.querySelector('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const positionX = canvas.width / 3;
+      const positionY = canvas.height / 3;
+      const paddingX = (canvas.width / 3) / 2;
+      const paddingY = (canvas.height / 3) / 2;
+
+      const positions = {
+        1: {
+          x: positionX,
+          y: positionY,
+        },
+        2: {
+          x: positionX * 2,
+          y: positionY,
+        },
+        3: {
+          x: positionX * 3,
+          y: positionY,
+        },
+        4: {
+          x: positionX,
+          y: positionY * 2,
+        },
+        5: {
+          x: positionX * 2,
+          y: positionY * 2,
+        },
+        6: {
+          x: positionX * 3,
+          y: positionY * 2,
+        },
+        7: {
+          x: positionX,
+          y: positionY * 3,
+        },
+        8: {
+          x: positionX * 2,
+          y: positionY * 3,
+        },
+        9: {
+          x: positionX * 3,
+          y: positionY * 3,
+        },
+      };
+
+      Object.keys(positions).map((i) => {
+        positions[i].x = positions[i].x - paddingX;
+        positions[i].y = positions[i].y - paddingY;
+      });
+
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.beginPath();
+      ctx.strokeStyle = 'black';
+
+      points.forEach((point, i) => {
+        if (i === 0) {
+          ctx.arc(positions[point].x, positions[point].y, width / 100, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.moveTo(positions[point].x, positions[point].y);
+        } else {
+          ctx.lineTo(positions[point].x, positions[point].y);
+        }
+      });
+
+      ctx.stroke();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.querySelector('.word input');
+
+      input.addEventListener('input', (e) => {
+        const value = input.value;
+        const points = convert(value);
+
+        draw(points);
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>T9 GLYPH</h1>
+  <div class="word">
+    <input type="text" placeholder="word" />
+  </div>
+  <div class="glyph">
+    <canvas
+      width="300"
+      height="300"
+    ></canvas>
+  </div>
+  <pre>
+    https://en.wikipedia.org/wiki/T9_(predictive_text)
+    https://en.wikipedia.org/wiki/Logogram
+    https://en.wikipedia.org/wiki/Featural_writing_system
+  </pre>
+</body>
+</html>
